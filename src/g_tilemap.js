@@ -4,46 +4,39 @@ function g_tilemap()
 	this.mapH;
 	this.tileW;
 	this.tileH;
-	this.tile;
+	this.map;
 	this.img;
 	this.tiles = [];
 	
-	this.load = function(tile, img, tileW, tileH)
+	this.load = function(map, img, tileW, tileH)
 	{	
 		this.tileW = tileW;
 		this.tileH = tileH;
 		this.img = img;
-		this.tile = tile;
+		this.map = map;
 		
-		console.log(this.tiles);
+		this.mapW = (map[0].length+1)/2;
+		this.mapH = map.length;
 		
-		this.mapW = (tile[0].length+1)/2;
-		this.mapH = tile.length;
-		
-		console.log(this.tileW);
-		for (x = 0; x < (16 / this.tileW); x++)
+		for (x = 0; x < (this.img.width / this.tileW); x++)
 		{
-			for (y = 0; y < (16 / this.tileH); y++)
+			for (y = 0; y < (this.img.height / this.tileH); y++)
 			{
-				this.tiles[x+y] = "Tiles: " + x * this.tileW + ", " + y * this.tileH + "!";
-				console.log(x+y);
+				this.tiles[y*(this.img.width / this.tileW)+x] = [x * this.tileW, y * this.tileH];
 			}
 		}
-			
-		console.log(this.tiles);
-			
-		// drawing map
-		map = createGraphics(this.mapW * tileW, this.mapH * tileH);
+		
+		map = createGraphics(this.tileW * this.mapW, this.tileH * this.mapH);
+		
 		for (i = 0; i < this.mapH; i++)
 		{
+			col = this.map[i].split(",");
 			for (j = 0; j < this.mapW; j++)
-			{
-				//map.image(this.img, this.mapW*this.tileW, this.mapH*this.tileH, this.tileW, this.tileH, );
+			{	
+				map.copy(this.img, this.tiles[col[j]][0], this.tiles[col[j]][1], this.tileW, this.tileH, j*this.tileW, i*this.tileH, this.tileW, this.tileH);
 			}
 		}
-			
+
 		return map;
-		
 	}
-		
 }
